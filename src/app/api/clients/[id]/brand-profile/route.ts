@@ -31,6 +31,11 @@ export async function PUT(request: Request, context: RouteContext) {
       voice: textValue(body.voice),
       targetAudience: textValue(body.targetAudience),
       valueProposition: textValue(body.valueProposition),
+      offers: textValue(body.offers),
+      contentPillars: textValue(body.contentPillars),
+      goals: textValue(body.goals),
+      platforms: textValue(body.platforms),
+      brandRules: textValue(body.brandRules),
     });
 
     return NextResponse.json({ success: true });

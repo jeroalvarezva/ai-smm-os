@@ -42,6 +42,11 @@ export default async function BrandProfilePage({ params }: PageProps<"/clients/[
               voice: profile?.voice ?? "",
               targetAudience: profile?.targetAudience ?? "",
               valueProposition: profile?.valueProposition ?? "",
+              offers: profile?.offers ?? "",
+              contentPillars: profile?.contentPillars ?? "",
+              goals: profile?.goals ?? "",
+              platforms: profile?.platforms ?? "",
+              brandRules: profile?.brandRules ?? "",
             }}
           />
         </section>

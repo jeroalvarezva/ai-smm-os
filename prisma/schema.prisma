@@ -64,6 +64,11 @@ model BrandProfile {
   voice            String?
   targetAudience   String?
   valueProposition String?
+  offers           String?
+  contentPillars   String?
+  goals            String?
+  platforms        String?
+  brandRules       String?
   client           Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt

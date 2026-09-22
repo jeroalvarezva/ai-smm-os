@@ -10,6 +10,11 @@ type BrandProfileValues = {
   voice: string;
   targetAudience: string;
   valueProposition: string;
+  offers: string;
+  contentPillars: string;
+  goals: string;
+  platforms: string;
+  brandRules: string;
 };
 
 export function BrandProfileForm({ clientId, initialValues }: { clientId: string; initialValues: BrandProfileValues }) {
@@ -78,9 +83,29 @@ export function BrandProfileForm({ clientId, initialValues }: { clientId: string
           <span>Target Audience</span>
           <textarea value={values.targetAudience} onChange={(event) => updateValue("targetAudience", event.target.value)} rows={4} placeholder="Who is the brand speaking to?" />
         </label>
-        <label className="form-field">
+        <label className="form-field form-field-wide">
           <span>Value Proposition</span>
           <textarea value={values.valueProposition} onChange={(event) => updateValue("valueProposition", event.target.value)} rows={4} placeholder="Why should customers choose this brand?" />
+        </label>
+        <label className="form-field form-field-wide">
+          <span>Offers &amp; Services</span>
+          <textarea value={values.offers} onChange={(event) => updateValue("offers", event.target.value)} rows={4} placeholder="What products, services, or offers does this brand provide?" />
+        </label>
+        <label className="form-field form-field-wide">
+          <span>Content Pillars</span>
+          <textarea value={values.contentPillars} onChange={(event) => updateValue("contentPillars", event.target.value)} rows={4} placeholder="What recurring topics or themes should the brand consistently create content about?" />
+        </label>
+        <label className="form-field form-field-wide">
+          <span>Goals &amp; KPIs</span>
+          <textarea value={values.goals} onChange={(event) => updateValue("goals", event.target.value)} rows={4} placeholder="What does the brand want social media to achieve?" />
+        </label>
+        <label className="form-field form-field-wide">
+          <span>Platforms</span>
+          <textarea value={values.platforms} onChange={(event) => updateValue("platforms", event.target.value)} rows={4} placeholder="Which social platforms does the brand use or plan to use?" />
+        </label>
+        <label className="form-field form-field-wide">
+          <span>Brand Rules &amp; Restrictions</span>
+          <textarea value={values.brandRules} onChange={(event) => updateValue("brandRules", event.target.value)} rows={4} placeholder="What must the brand avoid, follow, or consistently maintain?" />
         </label>
       </div>
 

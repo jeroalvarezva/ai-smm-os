@@ -8,6 +8,11 @@ export type BrandProfileInput = {
   voice?: string;
   targetAudience?: string;
   valueProposition?: string;
+  offers?: string;
+  contentPillars?: string;
+  goals?: string;
+  platforms?: string;
+  brandRules?: string;
 };
 
 export async function upsertBrandProfile(clientId: string, input: BrandProfileInput) {
@@ -28,6 +33,11 @@ export async function upsertBrandProfile(clientId: string, input: BrandProfileIn
         voice: input.voice || null,
         targetAudience: input.targetAudience || null,
         valueProposition: input.valueProposition || null,
+        offers: input.offers || null,
+        contentPillars: input.contentPillars || null,
+        goals: input.goals || null,
+        platforms: input.platforms || null,
+        brandRules: input.brandRules || null,
       },
       update: {
         brandName: input.brandName,
@@ -36,6 +46,11 @@ export async function upsertBrandProfile(clientId: string, input: BrandProfileIn
         voice: input.voice || null,
         targetAudience: input.targetAudience || null,
         valueProposition: input.valueProposition || null,
+        offers: input.offers || null,
+        contentPillars: input.contentPillars || null,
+        goals: input.goals || null,
+        platforms: input.platforms || null,
+        brandRules: input.brandRules || null,
       },
     });
   } catch (error) {
