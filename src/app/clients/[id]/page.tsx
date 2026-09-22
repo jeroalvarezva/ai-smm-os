@@ -43,6 +43,43 @@ export default async function ClientDetailPage({ params }: PageProps<"/clients/[
             <div className="detail-field-wide"><dt>Description</dt><dd>{client.description || "No description added."}</dd></div>
           </dl>
         </section>
+
+        <section className="brand-profile-panel" aria-labelledby="brand-profile-title">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Central brand context</p>
+              <h2 id="brand-profile-title">Brand Profile</h2>
+            </div>
+            {client.brandProfile && <Link className="button button-secondary" href={`/clients/${client.id}/brand-profile`}>Edit Brand Profile</Link>}
+          </div>
+
+          {client.brandProfile ? (
+            <div className="brand-profile-summary">
+              <div className="brand-profile-summary-heading">
+                <div>
+                  <p className="eyebrow">Brand name</p>
+                  <h3>{client.brandProfile.brandName}</h3>
+                </div>
+              </div>
+              <dl className="detail-grid brand-profile-grid">
+                <div><dt>Description</dt><dd>{client.brandProfile.description || "Not specified"}</dd></div>
+                <div><dt>Personality</dt><dd>{client.brandProfile.personality || "Not specified"}</dd></div>
+                <div><dt>Voice</dt><dd>{client.brandProfile.voice || "Not specified"}</dd></div>
+                <div><dt>Target audience</dt><dd>{client.brandProfile.targetAudience || "Not specified"}</dd></div>
+                <div className="detail-field-wide"><dt>Value proposition</dt><dd>{client.brandProfile.valueProposition || "Not specified"}</dd></div>
+              </dl>
+            </div>
+          ) : (
+            <div className="brand-profile-empty">
+              <div className="empty-state-icon" aria-hidden="true">+</div>
+              <div>
+                <h3>No Brand Profile yet</h3>
+                <p>Create a central place for this client&apos;s brand context.</p>
+              </div>
+              <Link className="button button-primary" href={`/clients/${client.id}/brand-profile`}>Create Brand Profile</Link>
+            </div>
+          )}
+        </section>
       </main>
     </div>
   );

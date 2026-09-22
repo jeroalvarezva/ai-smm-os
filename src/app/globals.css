@@ -521,11 +521,64 @@ body {
 
 .clients-panel,
 .form-panel,
-.detail-panel {
+.detail-panel,
+.brand-profile-panel {
   background: #ffffff;
   border: 1px solid #e5eaf0;
   border-radius: 12px;
   padding: 28px;
+}
+
+.brand-profile-panel {
+  margin-top: 24px;
+}
+
+.brand-profile-summary {
+  border-top: 1px solid #e9edf2;
+  padding-top: 24px;
+}
+
+.brand-profile-summary-heading h3 {
+  color: #26364b;
+  font-size: 20px;
+  letter-spacing: -0.03em;
+  margin: 6px 0 0;
+}
+
+.brand-profile-grid {
+  padding-top: 24px;
+}
+
+.brand-profile-empty {
+  align-items: center;
+  background: #f8fbfa;
+  border: 1px dashed #cfe3da;
+  border-radius: 9px;
+  display: flex;
+  gap: 16px;
+  padding: 22px;
+}
+
+.brand-profile-empty .empty-state-icon {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.brand-profile-empty h3 {
+  color: #285444;
+  font-size: 15px;
+  margin: 0;
+}
+
+.brand-profile-empty p {
+  color: #668a7e;
+  font-size: 12px;
+  margin: 5px 0 0;
+}
+
+.brand-profile-empty .button {
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 .client-list {
@@ -838,7 +891,8 @@ body {
 
   .clients-panel,
   .form-panel,
-  .detail-panel {
+  .detail-panel,
+  .brand-profile-panel {
     padding: 20px;
   }
 
@@ -869,6 +923,15 @@ body {
 
   .detail-heading .client-status {
     margin-left: 80px;
+  }
+
+  .brand-profile-empty {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .brand-profile-empty .button {
+    margin-left: 64px;
   }
 
   .hero-panel {
