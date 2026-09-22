@@ -585,6 +585,50 @@ body {
   border-top: 1px solid #e9edf2;
 }
 
+.content-list {
+  border-top: 1px solid #e9edf2;
+  overflow-x: auto;
+}
+
+.content-list-header,
+.content-row {
+  align-items: center;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(220px, 1.6fr) 110px 110px minmax(120px, 1fr) 110px 130px 130px;
+  min-width: 920px;
+  padding: 15px 4px;
+}
+
+.content-list-header {
+  color: #8793a3;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.content-row {
+  border-top: 1px solid #e9edf2;
+  color: #5e6d80;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.content-row:hover {
+  background: #f8fafc;
+}
+
+.content-row strong {
+  color: #26364b;
+  font-size: 13px;
+}
+
+.content-status {
+  color: #327c6c;
+  font-weight: 700;
+}
+
 .client-row {
   align-items: center;
   border-bottom: 1px solid #e9edf2;

@@ -53,6 +53,7 @@ export default async function ClientDetailPage({ params }: PageProps<"/clients/[
             <div className="section-heading-actions">
               <Link className="button button-secondary" href={`/clients/${client.id}/brand-brain`}>Brand Brain</Link>
               <Link className="button button-secondary" href={`/clients/${client.id}/strategy`}>Strategy</Link>
+              <Link className="button button-secondary" href={`/clients/${client.id}/content`}>Content Planning</Link>
               {client.brandProfile && <Link className="button button-secondary" href={`/clients/${client.id}/brand-profile`}>Edit Brand Profile</Link>}
             </div>
           </div>

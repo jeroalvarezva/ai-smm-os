@@ -29,10 +29,12 @@ enum Platform {
 }
 
 enum ContentType {
+  IMAGE
   POST
   CAROUSEL
   REEL
   STORY
+  TEXT
   VIDEO
   ARTICLE
   OTHER
@@ -40,6 +42,7 @@ enum ContentType {
 
 enum ContentStatus {
   DRAFT
+  PLANNED
   IN_PROGRESS
   IN_REVIEW
   APPROVED
@@ -96,15 +99,21 @@ model Strategy {
 }
 
 model ContentItem {
-  id          String        @id @default(cuid())
-  clientId    String
-  title       String
-  description String?
-  platform    Platform
-  contentType ContentType
-  status      ContentStatus @default(DRAFT)
-  scheduledAt DateTime?
-  client      Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id             String        @id @default(cuid())
+  clientId       String
+  title          String
+  description    String?
+  platform       Platform
+  contentType    ContentType
+  contentPillar  String?
+  objective      String?
+  targetAudience String?
+  hook           String?
+  callToAction   String?
+  scheduledAt    DateTime?
+  status         ContentStatus @default(DRAFT)
+  notes          String?
+  client         Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
