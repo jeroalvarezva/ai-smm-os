@@ -18,7 +18,7 @@ export async function listClients() {
 export async function getClientById(id: string) {
   return prisma.client.findUnique({
     where: { id },
-    include: { brandProfile: true },
+    include: { brandProfile: true, strategy: true },
   });
 }
 

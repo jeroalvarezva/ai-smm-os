@@ -12,6 +12,12 @@ enum ClientStatus {
   ARCHIVED
 }
 
+enum StrategyStatus {
+  DRAFT
+  READY
+  ARCHIVED
+}
+
 enum Platform {
   INSTAGRAM
   FACEBOOK
@@ -50,6 +56,7 @@ model Client {
   website      String?
   status       ClientStatus  @default(ACTIVE)
   brandProfile BrandProfile?
+  strategy     Strategy?
   contentItems ContentItem[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -72,6 +79,20 @@ model BrandProfile {
   client           Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+model Strategy {
+  id               String        @id @default(cuid())
+  clientId         String        @unique
+  status           StrategyStatus @default(DRAFT)
+  objectives      String?
+  audienceStrategy String?
+  contentStrategy  String?
+  platformStrategy String?
+  strategicNotes   String?
+  client           Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 }
 
 model ContentItem {
