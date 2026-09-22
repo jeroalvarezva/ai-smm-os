@@ -1,5 +1,7 @@
 "use client";
 
+"use client";
+
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -15,6 +17,8 @@ type StrategyValues = {
   strategicNotes: string;
 };
 
+type GeneratedDraft = StrategyValues | null;
+
 const emptyState: StrategyValues = {
   status: StrategyStatus.DRAFT,
   objectives: "",
@@ -29,8 +33,10 @@ export default function StrategyPage({ params }: { params: Promise<{ id: string 
   const [clientId, setClientId] = useState("");
   const [clientName, setClientName] = useState("");
   const [values, setValues] = useState<StrategyValues>(emptyState);
+  const [draft, setDraft] = useState<GeneratedDraft>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
 
@@ -81,6 +87,43 @@ export default function StrategyPage({ params }: { params: Promise<{ id: string 
     setValues((current) => ({ ...current, [field]: value }));
   }
 
+  async function handleGenerateDraft() {
+    setError("");
+    setStatusMessage("");
+    setIsGenerating(true);
+    setDraft(null);
+
+    try {
+      const response = await fetch(`/api/clients/${clientId}/strategy/generate`, {
+        method: "POST",
+      });
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 400 && result.error) {
+          setError(result.error);
+          return;
+        }
+
+        setError(result.error ?? "The strategy draft could not be generated right now.");
+        return;
+      }
+
+      setDraft({
+        status: result.status ?? StrategyStatus.DRAFT,
+        objectives: result.objectives ?? "",
+        audienceStrategy: result.audienceStrategy ?? "",
+        contentStrategy: result.contentStrategy ?? "",
+        platformStrategy: result.platformStrategy ?? "",
+        strategicNotes: result.strategicNotes ?? "",
+      });
+    } catch {
+      setError("The strategy draft could not be generated right now.");
+    } finally {
+      setIsGenerating(false);
+    }
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
@@ -109,6 +152,7 @@ export default function StrategyPage({ params }: { params: Promise<{ id: string 
         platformStrategy: result.platformStrategy ?? "",
         strategicNotes: result.strategicNotes ?? "",
       });
+      setDraft(null);
     } catch {
       setError("The Strategy could not be saved right now. Please try again.");
     } finally {
@@ -144,7 +188,12 @@ export default function StrategyPage({ params }: { params: Promise<{ id: string 
               <p className="eyebrow">Brand Brain connection</p>
               <h2 id="strategy-facts-title">Strategy foundation</h2>
             </div>
-            <Link className="button button-secondary" href={`/clients/${clientId}/brand-brain`}>View Brand Brain</Link>
+            <div className="section-heading-actions">
+              <Link className="button button-secondary" href={`/clients/${clientId}/brand-brain`}>View Brand Brain</Link>
+              <button type="button" className="button button-primary" onClick={handleGenerateDraft} disabled={isGenerating || isLoading || !clientId}>
+                {isGenerating ? "Generating..." : "Generate Strategy Draft"}
+              </button>
+            </div>
           </div>
 
           {!isLoading && !hasStrategy ? (
@@ -154,22 +203,45 @@ export default function StrategyPage({ params }: { params: Promise<{ id: string 
                 <h3>Strategy not created yet</h3>
                 <p>The strategy will eventually be generated from the client&apos;s Brand Brain.</p>
               </div>
-              <button
-                type="button"
-                className="button button-primary"
-                onClick={() => setValues({ ...emptyState, status: StrategyStatus.DRAFT })}
-              >
-                Create Strategy
-              </button>
             </div>
           ) : null}
+
+          {error && <p className="form-error" role="alert" style={{ marginTop: 16 }}>{error}</p>}
         </section>
+
+        {draft && (
+          <section className="detail-panel" aria-labelledby="generated-draft-title" style={{ marginTop: 24 }}>
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Generated draft</p>
+                <h2 id="generated-draft-title">Development AI Draft</h2>
+              </div>
+              <div className="section-heading-actions">
+                <button type="button" className="button button-secondary" onClick={() => setDraft(null)}>Discard Draft</button>
+                <button type="button" className="button button-primary" onClick={() => {
+                  setValues(draft);
+                  setStatusMessage("Draft ready to save.");
+                }}>
+                  Save Strategy
+                </button>
+              </div>
+            </div>
+
+            <dl className="detail-grid brand-profile-grid">
+              <div className="detail-field-wide"><dt>Objectives</dt><dd>{draft.objectives || "Not defined yet"}</dd></div>
+              <div className="detail-field-wide"><dt>Audience Strategy</dt><dd>{draft.audienceStrategy || "Not defined yet"}</dd></div>
+              <div className="detail-field-wide"><dt>Content Strategy</dt><dd>{draft.contentStrategy || "Not defined yet"}</dd></div>
+              <div className="detail-field-wide"><dt>Platform Strategy</dt><dd>{draft.platformStrategy || "Not defined yet"}</dd></div>
+              <div className="detail-field-wide"><dt>Strategic Notes</dt><dd>{draft.strategicNotes || "Not defined yet"}</dd></div>
+            </dl>
+          </section>
+        )}
 
         <form className="form-panel" onSubmit={handleSubmit} style={{ marginTop: 24 }}>
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Strategy details</p>
-              <h2>Strategy overview</h2>
+              <p className="eyebrow">Saved strategy</p>
+              <h2>Saved Strategy</h2>
             </div>
           </div>
 
@@ -209,7 +281,6 @@ export default function StrategyPage({ params }: { params: Promise<{ id: string 
             </label>
           </div>
 
-          {error && <p className="form-error" role="alert">{error}</p>}
           {statusMessage && <p className="form-success" role="status">{statusMessage}</p>}
 
           <div className="form-actions">
