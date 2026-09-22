@@ -50,7 +50,10 @@ export default async function ClientDetailPage({ params }: PageProps<"/clients/[
               <p className="eyebrow">Central brand context</p>
               <h2 id="brand-profile-title">Brand Profile</h2>
             </div>
-            {client.brandProfile && <Link className="button button-secondary" href={`/clients/${client.id}/brand-profile`}>Edit Brand Profile</Link>}
+            <div className="section-heading-actions">
+              <Link className="button button-secondary" href={`/clients/${client.id}/brand-brain`}>Brand Brain</Link>
+              {client.brandProfile && <Link className="button button-secondary" href={`/clients/${client.id}/brand-profile`}>Edit Brand Profile</Link>}
+            </div>
           </div>
 
           {client.brandProfile ? (
