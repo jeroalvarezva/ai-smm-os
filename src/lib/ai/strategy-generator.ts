@@ -29,6 +29,20 @@ export interface StrategyProvider {
   generateStrategy(input: StrategyGenerationInput): Promise<StrategyDraft>;
 }
 
+export function getGeminiClient() {
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
+
+  if (!apiKey) {
+    throw new Error("Gemini API is not configured.");
+  }
+
+  return new GoogleGenAI({ apiKey });
+}
+
+export function getGeminiModel() {
+  return process.env.GEMINI_MODEL?.trim() || "gemini-3.6-flash";
+}
+
 export function isValidStrategyDraft(value: unknown): value is StrategyDraft {
   if (!value || typeof value !== "object") {
     return false;
@@ -68,14 +82,8 @@ export class MockAIProvider implements StrategyProvider {
 
 export class GeminiProvider implements StrategyProvider {
   async generateStrategy(input: StrategyGenerationInput): Promise<StrategyDraft> {
-    const apiKey = process.env.GEMINI_API_KEY?.trim();
-
-    if (!apiKey) {
-      throw new Error("Gemini API is not configured.");
-    }
-
-    const model = process.env.GEMINI_MODEL?.trim() || "gemini-2.5-flash";
-    const ai = new GoogleGenAI({ apiKey });
+    const model = getGeminiModel();
+    const ai = getGeminiClient();
     const strategySchema = {
       type: "object",
       properties: {
@@ -133,12 +141,7 @@ export class GeminiProvider implements StrategyProvider {
 }
 
 export function getDefaultStrategyProvider(): StrategyProvider {
-  const apiKey = process.env.GEMINI_API_KEY?.trim();
-
-  if (!apiKey) {
-    throw new Error("Gemini API is not configured.");
-  }
-
+  getGeminiClient();
   return new GeminiProvider();
 }
 

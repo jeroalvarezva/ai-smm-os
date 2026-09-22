@@ -68,4 +68,16 @@ export async function updateContentItem(id: string, input: ContentItemInput) {
   }
 }
 
+export async function createContentItems(clientId: string, inputs: ContentItemInput[]) {
+  try {
+    return await prisma.$transaction(inputs.map((input) => prisma.contentItem.create({ data: { clientId, ...contentData(input) } })));
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      throw new Error("The content plan could not be saved. Please check the information and try again.");
+    }
+
+    throw new Error("The content plan could not be saved right now. Please try again.");
+  }
+}
+
 export type ContentItemRecord = ContentItem;

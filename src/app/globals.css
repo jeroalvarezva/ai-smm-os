@@ -350,6 +350,13 @@ body {
   margin-bottom: 18px;
 }
 
+.section-heading-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .section-heading h2 {
   color: #1a2639;
   font-size: 21px;
@@ -806,6 +813,109 @@ body {
   font-size: 12px;
   margin: 20px 0 0;
   padding: 11px 12px;
+}
+
+.form-success {
+  background: #e9f3ef;
+  border: 1px solid #d5eae1;
+  border-radius: 7px;
+  color: #327c6c;
+  font-size: 12px;
+  margin: 20px 0 0;
+  padding: 11px 12px;
+}
+
+.count-control {
+  align-items: center;
+  color: #43536a;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 8px;
+}
+
+.count-control select {
+  background: #fbfcfd;
+  border: 1px solid #dce3ea;
+  border-radius: 7px;
+  color: #26364b;
+  font: inherit;
+  font-size: 13px;
+  padding: 10px 12px;
+}
+
+.ai-plan-panel {
+  margin-bottom: 24px;
+}
+
+.ai-plan-draft {
+  border-top: 1px solid #e9edf2;
+  margin-top: 22px;
+  padding-top: 22px;
+}
+
+.ai-plan-draft-heading {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.ai-plan-draft-heading .section-note {
+  margin-top: 6px;
+}
+
+.ai-plan-table-wrap {
+  border: 1px solid #e5eaf0;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.ai-plan-table {
+  border-collapse: collapse;
+  min-width: 1120px;
+  width: 100%;
+}
+
+.ai-plan-table th,
+.ai-plan-table td {
+  border-bottom: 1px solid #e9edf2;
+  padding: 13px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.ai-plan-table th {
+  color: #8793a3;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ai-plan-table td {
+  color: #5e6d80;
+  font-size: 12px;
+  line-height: 1.45;
+  max-width: 220px;
+}
+
+.ai-plan-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.ai-plan-table td strong,
+.ai-plan-table td small {
+  display: block;
+}
+
+.ai-plan-table td strong {
+  color: #26364b;
+  font-size: 13px;
+}
+
+.ai-plan-table td small {
+  color: #8793a3;
+  margin-top: 5px;
 }
 
 .form-actions {

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Sidebar } from "@/components/sidebar";
+import { ContentPlanGenerator } from "@/components/content-plan-generator";
 import { getClientById } from "@/lib/clients";
 import { getContentItemsByClient } from "@/lib/content-items";
 
@@ -31,6 +32,8 @@ export default async function ContentPlanningPage({ params }: { params: Promise<
           </div>
           <Link className="button button-primary" href={`/clients/${id}/content/new`}>Create Content Item</Link>
         </header>
+
+        <ContentPlanGenerator clientId={id} />
 
         <section className="clients-panel" aria-labelledby="content-list-title">
           <div className="section-heading">
