@@ -20,6 +20,14 @@ export async function POST(_request: Request, context: RouteContext) {
       return NextResponse.json({ error: message }, { status: 400 });
     }
 
+    if (message === "Gemini API is not configured.") {
+      return NextResponse.json({ error: message }, { status: 500 });
+    }
+
+    if (message === "Gemini could not generate the strategy right now. Please try again.") {
+      return NextResponse.json({ error: message }, { status: 500 });
+    }
+
     return NextResponse.json({ error: "The strategy draft could not be generated right now." }, { status: 500 });
   }
 }

@@ -1,4 +1,5 @@
 import { StrategyStatus } from "@prisma/client";
+import { GoogleGenAI } from "@google/genai";
 import { getClientById } from "@/lib/clients";
 
 export type StrategyDraft = {
@@ -47,7 +48,7 @@ export function isValidStrategyDraft(value: unknown): value is StrategyDraft {
     "strategicNotes",
   ] as const;
 
-  return requiredKeys.every((key) => typeof draft[key] === "string");
+  return requiredKeys.every((key) => typeof draft[key] === "string" && draft[key]?.trim().length > 0);
 }
 
 export class MockAIProvider implements StrategyProvider {
@@ -65,12 +66,87 @@ export class MockAIProvider implements StrategyProvider {
   }
 }
 
-export const defaultStrategyProvider: StrategyProvider = new MockAIProvider();
+export class GeminiProvider implements StrategyProvider {
+  async generateStrategy(input: StrategyGenerationInput): Promise<StrategyDraft> {
+    const apiKey = process.env.GEMINI_API_KEY?.trim();
+
+    if (!apiKey) {
+      throw new Error("Gemini API is not configured.");
+    }
+
+    const model = process.env.GEMINI_MODEL?.trim() || "gemini-2.5-flash";
+    const ai = new GoogleGenAI({ apiKey });
+    const strategySchema = {
+      type: "object",
+      properties: {
+        objectives: { type: "string" },
+        audienceStrategy: { type: "string" },
+        contentStrategy: { type: "string" },
+        platformStrategy: { type: "string" },
+        strategicNotes: { type: "string" },
+      },
+      required: ["objectives", "audienceStrategy", "contentStrategy", "platformStrategy", "strategicNotes"],
+      additionalProperties: false,
+    };
+
+    const prompt = `You are a professional social media strategist generating a draft strategy for review. Use only the supplied Brand Brain information. You may make reasonable strategic inferences, but do not invent products, services, audiences, platforms, claims, statistics, competitors, or facts not supported by the Brand Brain. When information is missing, clearly describe it as missing or not defined. Output only valid JSON matching the required structure. This is a draft for human review, not a final approved strategy.\n\nBrand Brain data:\n${JSON.stringify(input, null, 2)}`;
+
+    try {
+      const response = await ai.models.generateContent({
+        model,
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          responseJsonSchema: strategySchema,
+          temperature: 0.7,
+        },
+      });
+
+      const raw = response.text;
+      if (!raw) {
+        throw new Error("Gemini returned an empty strategy draft.");
+      }
+
+      const parsed = JSON.parse(raw) as Record<string, unknown>;
+      const draft: StrategyDraft = {
+        status: StrategyStatus.DRAFT,
+        objectives: typeof parsed.objectives === "string" ? parsed.objectives : "",
+        audienceStrategy: typeof parsed.audienceStrategy === "string" ? parsed.audienceStrategy : "",
+        contentStrategy: typeof parsed.contentStrategy === "string" ? parsed.contentStrategy : "",
+        platformStrategy: typeof parsed.platformStrategy === "string" ? parsed.platformStrategy : "",
+        strategicNotes: typeof parsed.strategicNotes === "string" ? parsed.strategicNotes : "",
+      };
+
+      if (!isValidStrategyDraft(draft)) {
+        throw new Error("Gemini returned an invalid strategy draft.");
+      }
+
+      return draft;
+    } catch (error) {
+      if (error instanceof Error && (error.message === "Gemini API is not configured." || error.message === "Gemini returned an invalid strategy draft." || error.message === "Gemini returned an empty strategy draft.")) {
+        throw error;
+      }
+
+      throw new Error("Gemini could not generate the strategy right now. Please try again.");
+    }
+  }
+}
+
+export function getDefaultStrategyProvider(): StrategyProvider {
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
+
+  if (!apiKey) {
+    throw new Error("Gemini API is not configured.");
+  }
+
+  return new GeminiProvider();
+}
 
 export async function generateStrategyFromBrandBrain(
   clientId: string,
-  provider: StrategyProvider = defaultStrategyProvider,
+  provider?: StrategyProvider,
 ): Promise<StrategyDraft> {
+  const activeProvider = provider ?? getDefaultStrategyProvider();
   const client = await getClientById(clientId);
 
   if (!client) {
@@ -96,7 +172,7 @@ export async function generateStrategyFromBrandBrain(
     brandRules: profile.brandRules ?? "",
   };
 
-  const draft = await provider.generateStrategy(input);
+  const draft = await activeProvider.generateStrategy(input);
 
   if (!isValidStrategyDraft(draft)) {
     throw new Error("The AI provider returned an invalid strategy draft.");
