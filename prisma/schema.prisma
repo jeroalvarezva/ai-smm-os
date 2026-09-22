@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum Platform {
+  INSTAGRAM
+  FACEBOOK
+  LINKEDIN
+  TIKTOK
+  X
+  YOUTUBE
+  OTHER
+}
+
+enum ContentType {
+  POST
+  CAROUSEL
+  REEL
+  STORY
+  VIDEO
+  ARTICLE
+  OTHER
+}
+
+enum ContentStatus {
+  DRAFT
+  IN_PROGRESS
+  IN_REVIEW
+  APPROVED
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+model Client {
+  id           String        @id @default(cuid())
+  name         String
+  description  String?
+  industry     String?
+  website      String?
+  status       ClientStatus  @default(ACTIVE)
+  brandProfile BrandProfile?
+  contentItems ContentItem[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model BrandProfile {
+  id               String   @id @default(cuid())
+  clientId         String   @unique
+  brandName        String
+  description      String?
+  personality      String?
+  voice            String?
+  targetAudience   String?
+  valueProposition String?
+  client           Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model ContentItem {
+  id          String        @id @default(cuid())
+  clientId    String
+  title       String
+  description String?
+  platform    Platform
+  contentType ContentType
+  status      ContentStatus @default(DRAFT)
+  scheduledAt DateTime?
+  client      Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
