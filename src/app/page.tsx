@@ -1,14 +1,4 @@
-const navigation = [
-  { label: "Dashboard", icon: "grid", active: true },
-  { label: "Clients", icon: "users" },
-  { label: "Brand Brain", icon: "spark" },
-  { label: "Strategy", icon: "compass" },
-  { label: "Calendar", icon: "calendar" },
-  { label: "Content Studio", icon: "pen" },
-  { label: "QA", icon: "check" },
-  { label: "Feedback & Revisions", icon: "message" },
-  { label: "Settings", icon: "settings" },
-];
+import { Sidebar } from "@/components/sidebar";
 
 const statusCards = [
   { label: "Active clients", value: "0", detail: "Your client workspace is ready" },
@@ -16,46 +6,10 @@ const statusCards = [
   { label: "Upcoming approvals", value: "0", detail: "Nothing waiting for review" },
 ];
 
-function NavigationIcon({ name }: { name: string }) {
-  return <span aria-hidden="true" className={`nav-icon nav-icon-${name}`} />;
-}
-
 export default function Home() {
   return (
     <div className="app-shell">
-      <aside className="sidebar">
-        <div className="brand-lockup">
-          <div className="brand-mark">AI</div>
-          <div>
-            <p className="brand-name">AI SMM OS</p>
-            <p className="brand-caption">Operations workspace</p>
-          </div>
-        </div>
-
-        <nav className="sidebar-nav" aria-label="Main navigation">
-          <p className="nav-heading">Workspace</p>
-          {navigation.map((item) => (
-            <button
-              key={item.label}
-              type="button"
-              className={`nav-item${item.active ? " nav-item-active" : ""}`}
-              aria-current={item.active ? "page" : undefined}
-            >
-              <NavigationIcon name={item.icon} />
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </nav>
-
-        <div className="sidebar-footer">
-          <div className="workspace-avatar">A</div>
-          <div>
-            <p className="workspace-name">Your workspace</p>
-            <p className="workspace-status">Foundation mode</p>
-          </div>
-          <span className="status-dot" aria-label="Workspace online" />
-        </div>
-      </aside>
+      <Sidebar activePath="/" />
 
       <main className="main-content">
         <header className="topbar">
