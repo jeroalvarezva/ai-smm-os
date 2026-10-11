@@ -45,6 +45,10 @@ function parseInput(body: Record<string, unknown>) {
       hook: textValue(body.hook),
       callToAction: textValue(body.callToAction),
       notes: textValue(body.notes),
+      ...(Object.prototype.hasOwnProperty.call(body, "caption") ? { caption: textValue(body.caption) } : {}),
+      ...(Object.prototype.hasOwnProperty.call(body, "script") ? { script: textValue(body.script) } : {}),
+      ...(Object.prototype.hasOwnProperty.call(body, "visualDirection") ? { visualDirection: textValue(body.visualDirection) } : {}),
+      ...(Object.prototype.hasOwnProperty.call(body, "productionNotes") ? { productionNotes: textValue(body.productionNotes) } : {}),
     },
   };
 }

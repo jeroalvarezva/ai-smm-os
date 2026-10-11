@@ -11,6 +11,10 @@ export type ContentItemInput = {
   targetAudience?: string;
   hook?: string;
   callToAction?: string;
+  caption?: string;
+  script?: string;
+  visualDirection?: string;
+  productionNotes?: string;
   scheduledAt?: Date | null;
   status?: ContentStatus;
   notes?: string;
@@ -27,6 +31,10 @@ function contentData(input: ContentItemInput) {
     targetAudience: input.targetAudience || null,
     hook: input.hook || null,
     callToAction: input.callToAction || null,
+    ...(input.caption !== undefined ? { caption: input.caption || null } : {}),
+    ...(input.script !== undefined ? { script: input.script || null } : {}),
+    ...(input.visualDirection !== undefined ? { visualDirection: input.visualDirection || null } : {}),
+    ...(input.productionNotes !== undefined ? { productionNotes: input.productionNotes || null } : {}),
     scheduledAt: input.scheduledAt ?? null,
     status: input.status ?? ContentStatus.DRAFT,
     notes: input.notes || null,

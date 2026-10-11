@@ -5,8 +5,9 @@ import { Sidebar } from "@/components/sidebar";
 import { getClientById } from "@/lib/clients";
 import { getContentItemById } from "@/lib/content-items";
 
-export default async function EditContentItemPage({ params }: { params: Promise<{ id: string; contentId: string }> }) {
+export default async function EditContentItemPage({ params, searchParams }: { params: Promise<{ id: string; contentId: string }>; searchParams: Promise<{ returnTo?: string }> }) {
   const { id, contentId } = await params;
+  const { returnTo } = await searchParams;
   const [client, item] = await Promise.all([getClientById(id), getContentItemById(contentId)]);
   if (!client || !item || item.clientId !== id) notFound();
 
@@ -25,6 +26,7 @@ export default async function EditContentItemPage({ params }: { params: Promise<
           <ContentItemForm
             clientId={id}
             contentId={item.id}
+            returnPath={returnTo === "calendar" ? `/clients/${id}/calendar` : undefined}
             initialValues={{
               ...item,
               description: item.description ?? "",

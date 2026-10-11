@@ -23,6 +23,7 @@ type ContentItemFormProps = {
   clientId: string;
   contentId?: string;
   initialValues?: Partial<ContentValues>;
+  returnPath?: string;
 };
 
 const platforms = Object.values(Platform);
@@ -41,7 +42,7 @@ function localDateTime(value?: string) {
   return new Date(date.getTime() - offset).toISOString().slice(0, 16);
 }
 
-export function ContentItemForm({ clientId, contentId, initialValues }: ContentItemFormProps) {
+export function ContentItemForm({ clientId, contentId, initialValues, returnPath }: ContentItemFormProps) {
   const router = useRouter();
   const [values, setValues] = useState<ContentValues>({
     title: initialValues?.title ?? "",
@@ -82,7 +83,7 @@ export function ContentItemForm({ clientId, contentId, initialValues }: ContentI
         return;
       }
 
-      router.push(`/clients/${clientId}/content`);
+      router.push(returnPath ?? `/clients/${clientId}/content`);
       router.refresh();
     } catch {
       setError("The content item could not be saved right now. Please try again.");
@@ -152,7 +153,7 @@ export function ContentItemForm({ clientId, contentId, initialValues }: ContentI
 
       {error && <p className="form-error" role="alert">{error}</p>}
       <div className="form-actions">
-        <button type="button" className="button button-secondary" onClick={() => router.push(`/clients/${clientId}/content`)}>Cancel</button>
+        <button type="button" className="button button-secondary" onClick={() => router.push(returnPath ?? `/clients/${clientId}/content`)}>Cancel</button>
         <button type="submit" className="button button-primary" disabled={isSaving}>{isSaving ? "Saving..." : contentId ? "Save changes" : "Create content item"}</button>
       </div>
     </form>

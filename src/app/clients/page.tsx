@@ -6,8 +6,19 @@ function formatStatus(status: string) {
   return status.charAt(0) + status.slice(1).toLowerCase();
 }
 
-export default async function ClientsPage() {
+const destinationLabels = {
+  "brand-brain": "Brand Brain",
+  strategy: "Strategy",
+  calendar: "Calendar",
+  "content-studio": "Content Studio",
+} as const;
+
+export default async function ClientsPage({ searchParams }: { searchParams: Promise<{ destination?: string }> }) {
   const clients = await listClients();
+  const { destination } = await searchParams;
+  const selectedDestination = destination && destination in destinationLabels
+    ? destination as keyof typeof destinationLabels
+    : null;
 
   return (
     <div className="app-shell">
@@ -17,7 +28,7 @@ export default async function ClientsPage() {
           <div>
             <p className="eyebrow">Workspace</p>
             <h1>Clients</h1>
-            <p className="page-description">Keep your client relationships organized in one place.</p>
+            <p className="page-description">{selectedDestination ? `Select a client to open ${destinationLabels[selectedDestination]}.` : "Keep your client relationships organized in one place."}</p>
           </div>
           <Link className="button button-primary" href="/clients/new">+ Add client</Link>
         </header>
@@ -41,7 +52,7 @@ export default async function ClientsPage() {
           ) : (
             <div className="client-list" role="list">
               {clients.map((client) => (
-                <Link className="client-row" href={`/clients/${client.id}`} key={client.id} role="listitem">
+                <Link className="client-row" href={selectedDestination ? `/clients/${client.id}/${selectedDestination}` : `/clients/${client.id}`} key={client.id}>
                   <div className="client-avatar">{client.name.charAt(0).toUpperCase()}</div>
                   <div className="client-row-main">
                     <h3>{client.name}</h3>

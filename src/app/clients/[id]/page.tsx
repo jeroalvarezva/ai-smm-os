@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Sidebar } from "@/components/sidebar";
+import { DeleteClientButton } from "@/components/delete-client-button";
 import { getClientById } from "@/lib/clients";
 
 function formatStatus(status: string) {
@@ -54,6 +55,8 @@ export default async function ClientDetailPage({ params }: PageProps<"/clients/[
               <Link className="button button-secondary" href={`/clients/${client.id}/brand-brain`}>Brand Brain</Link>
               <Link className="button button-secondary" href={`/clients/${client.id}/strategy`}>Strategy</Link>
               <Link className="button button-secondary" href={`/clients/${client.id}/content`}>Content Planning</Link>
+              <Link className="button button-secondary" href={`/clients/${client.id}/calendar`}>Calendar</Link>
+              <Link className="button button-secondary" href={`/clients/${client.id}/content-studio`}>Content Studio</Link>
               {client.brandProfile && <Link className="button button-secondary" href={`/clients/${client.id}/brand-profile`}>Edit Brand Profile</Link>}
             </div>
           </div>
@@ -84,6 +87,15 @@ export default async function ClientDetailPage({ params }: PageProps<"/clients/[
               <Link className="button button-primary" href={`/clients/${client.id}/brand-profile`}>Create Brand Profile</Link>
             </div>
           )}
+        </section>
+
+        <section className="danger-zone" aria-labelledby="delete-client-section-title">
+          <div>
+            <p className="eyebrow">Danger zone</p>
+            <h2 id="delete-client-section-title">Delete client</h2>
+            <p>This removes the client and all of its related planning data.</p>
+          </div>
+          <DeleteClientButton clientId={client.id} clientName={client.name} />
         </section>
       </main>
     </div>

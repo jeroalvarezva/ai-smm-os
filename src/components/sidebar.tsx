@@ -1,15 +1,18 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navigation = [
-  { label: "Dashboard", href: "/", icon: "grid" },
-  { label: "Clients", href: "/clients", icon: "users" },
-  { label: "Brand Brain", href: "#", icon: "spark" },
-  { label: "Strategy", href: "#", icon: "compass" },
-  { label: "Calendar", href: "#", icon: "calendar" },
-  { label: "Content Studio", href: "#", icon: "pen" },
-  { label: "QA", href: "#", icon: "check" },
-  { label: "Feedback & Revisions", href: "#", icon: "message" },
-  { label: "Settings", href: "#", icon: "settings" },
+  { label: "Dashboard", href: "/dashboard", icon: "grid", activePath: "/" },
+  { label: "Clients", href: "/clients", icon: "users", activePath: "/clients" },
+  { label: "Brand Brain", href: "/clients?destination=brand-brain", icon: "spark", activePath: "/brand-brain" },
+  { label: "Strategy", href: "/clients?destination=strategy", icon: "compass", activePath: "/strategy" },
+  { label: "Calendar", href: "/clients?destination=calendar", icon: "calendar", activePath: "/calendar" },
+  { label: "Content Studio", href: "/clients?destination=content-studio", icon: "pen", activePath: "/content-studio" },
+  { label: "QA", href: null, icon: "check", activePath: null },
+  { label: "Feedback & Revisions", href: null, icon: "message", activePath: null },
+  { label: "Settings", href: null, icon: "settings", activePath: null },
 ];
 
 function NavigationIcon({ name }: { name: string }) {
@@ -17,6 +20,9 @@ function NavigationIcon({ name }: { name: string }) {
 }
 
 export function Sidebar({ activePath }: { activePath: string }) {
+  const pathname = usePathname();
+  const currentPath = pathname || activePath;
+
   return (
     <aside className="sidebar">
       <div className="brand-lockup">
@@ -30,12 +36,17 @@ export function Sidebar({ activePath }: { activePath: string }) {
       <nav className="sidebar-nav" aria-label="Main navigation">
         <p className="nav-heading">Workspace</p>
         {navigation.map((item) => {
-          const active = item.href === activePath;
+          const activeFeature = navigation.some((candidate) => candidate.activePath && candidate.activePath !== "/" && candidate.activePath !== "/clients" && currentPath.endsWith(candidate.activePath));
+          const active = item.activePath === "/"
+            ? currentPath === "/" || currentPath === "/dashboard"
+            : item.activePath === "/clients"
+              ? !activeFeature && (currentPath === "/clients" || currentPath === "/clients/new" || /^\/clients\/[^/]+$/.test(currentPath))
+              : Boolean(item.activePath && currentPath.endsWith(item.activePath));
           const className = `nav-item${active ? " nav-item-active" : ""}`;
 
-          if (item.href === "#") {
+          if (!item.href) {
             return (
-              <button key={item.label} type="button" className={className}>
+              <button key={item.label} type="button" className={`${className} nav-item-disabled`} disabled aria-disabled="true" title={`${item.label} is not available yet`}>
                 <NavigationIcon name={item.icon} />
                 <span>{item.label}</span>
               </button>

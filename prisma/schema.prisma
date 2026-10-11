@@ -110,6 +110,17 @@ model ContentItem {
   targetAudience String?
   hook           String?
   callToAction   String?
+  caption        String?
+  script         String?
+  visualDirection String?
+  productionNotes String?
+  onScreenText   String?
+  shotList       String?
+  aiImagePrompt  String?
+  aiVideoPrompt  String?
+  voiceover      String?
+  soundDirection String?
+  thumbnailDirection String?
   scheduledAt    DateTime?
   status         ContentStatus @default(DRAFT)
   notes          String?
